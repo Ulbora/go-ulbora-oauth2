@@ -47,6 +47,7 @@ func (r *Oauth) Authorize(me *Claim) bool {
 	a.ClientID = r.ClientID
 	a.Role = me.Role
 	a.URI = me.URI
+	a.Scope = me.Scope
 
 	aJSON, err := json.Marshal(a)
 	fmt.Println("before request")
