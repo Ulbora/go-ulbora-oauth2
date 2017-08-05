@@ -50,29 +50,33 @@ func (r *Oauth) Authorize(me *Claim) bool {
 	a.Scope = me.Scope
 
 	aJSON, err := json.Marshal(a)
-	fmt.Println("before request")
+	if err != nil {
+		fmt.Println(err)
+	}
+	//fmt.Println("before request")
 	req, rErr := http.NewRequest("POST", r.ValidationURL, bytes.NewBuffer(aJSON))
 	if rErr != nil {
 		fmt.Print("request err: ")
 		fmt.Println(rErr)
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Print("Do err: ")
-		fmt.Println(err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == 200 {
-		vResp := new(ValidationResp)
-		decoder := json.NewDecoder(resp.Body)
-		error := decoder.Decode(&vResp)
-		if error != nil {
-			log.Println(error.Error())
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		client := &http.Client{}
+		resp, cErr := client.Do(req)
+		if cErr != nil {
+			fmt.Print("Do err: ")
+			fmt.Println(cErr)
 		} else {
-			rtn = vResp.Valid
+			defer resp.Body.Close()
+			if resp.StatusCode == 200 {
+				vResp := new(ValidationResp)
+				decoder := json.NewDecoder(resp.Body)
+				error := decoder.Decode(&vResp)
+				if error != nil {
+					log.Println(error.Error())
+				} else {
+					rtn = vResp.Valid
+				}
+			}
 		}
 	}
 	return rtn
