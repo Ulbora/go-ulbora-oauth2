@@ -63,7 +63,7 @@ func (r *Oauth) Authorize(me *Claim) bool {
 		client := &http.Client{}
 		resp, cErr := client.Do(req)
 		if cErr != nil {
-			fmt.Print("Do err: ")
+			fmt.Print("Ulbora OAuth2 proxy err: ")
 			fmt.Println(cErr)
 		} else {
 			defer resp.Body.Close()
