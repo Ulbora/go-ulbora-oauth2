@@ -12,6 +12,7 @@ import (
 type Oauth struct {
 	Token         string
 	UserID        string
+	Hashed        bool
 	ClientID      int64
 	ValidationURL string
 }
@@ -27,6 +28,7 @@ type Claim struct {
 type AuthReq struct {
 	AccessToken string `json:"accessToken"`
 	UserID      string `json:"userId"`
+	Hashed      bool   `json:"hashed"`
 	ClientID    int64  `json:"clientId"`
 	Role        string `json:"role"`
 	URI         string `json:"uri"`
@@ -44,6 +46,7 @@ func (r *Oauth) Authorize(me *Claim) bool {
 	var a AuthReq
 	a.AccessToken = r.Token
 	a.UserID = r.UserID
+	a.Hashed = r.Hashed
 	a.ClientID = r.ClientID
 	a.Role = me.Role
 	a.URI = me.URI
